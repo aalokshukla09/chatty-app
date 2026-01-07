@@ -1,5 +1,6 @@
 import User from "../models/user.js"
 import bcrypt from "bcryptjs";
+import { generateToken } from "../library/utils.js";
 
 export const signupController = async (req, res) => {
     const {fullName, email, password} = req.body;
@@ -32,7 +33,26 @@ export const signupController = async (req, res) => {
             password: hashedPassword,
         });
 
+        if(newUser) {
+            generateToken(newUser._id, res);
+            await newUser.save();
+
+            return res.status(201).json({
+                _id: newUser._id,
+                fullName: newUser.fullName,
+                email: newUser.email,
+                profilePic: newUser.profilePic,
+            });
+
+            // TODO: send a welcome email
+            
+        } else {
+            return res.status(400).json({message: "Invalid user data"});
+        }
+
     } catch (error) {
+        console.error("Error in signupController:", error);
+        return res.status(500).json({message: "Server Error"});
         
     }
 }
