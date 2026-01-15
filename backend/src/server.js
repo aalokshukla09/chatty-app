@@ -11,7 +11,7 @@ const app = express(); // Initialize Express app
 
 const PORT = process.env.PORT || 9000;
 
-app.use(express.json()); // Middleware to parse JSON bodies
+app.use(express.json()); // Middleware to parse JSON bodies to JavaScript objects
 app.use(cookieParser());
 
 // Routes
